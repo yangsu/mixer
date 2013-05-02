@@ -1,0 +1,25 @@
+{
+  "folders":
+  [
+    {
+      "path": "app",
+      "file_exclude_patterns": [".htaccess", "*.ico", ".buildignore"],
+      "folder_exclude_patterns": ["components"]
+    },
+    {
+      "path": ".",
+      "file_exclude_patterns": ["*.sublime-workspace", ".gitattributes", ".npmignore"],
+      "folder_exclude_patterns": ["app", "temp", "dist", ".tmp", "node_modules"]
+    }
+  ],
+  "settings": {
+    "tab_size": 2,
+    "translate_tabs_to_spaces": true
+  },
+  "build_systems":[{
+    "name": "Application",
+    "cmd": ["grunt", "build", "-no-color"],
+    "path": "/bin:/usr/local/bin:/usr/bin:/usr/local/share/npm/bin",
+    "working_dir": "."
+  }]
+}
