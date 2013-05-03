@@ -8,6 +8,14 @@ GLOBAL.mixer =
   Routers: {}
   Templates: {}
 
+  log: (value, min, max) ->
+    # Logarithm (base 2) to compute how many octaves fall in the range.
+    numberOfOctaves = Math.log(max / min) / Math.LN2
+    # Compute a multiplier from 0 to 1 based on an exponential scale.
+    multiplier = Math.pow(2, numberOfOctaves * (value - 1.0))
+    # Scale value between min and max.
+    max * multiplier
+
   init: ->
 
     audioFileUrl = 'files/WalterWhite.mp3'

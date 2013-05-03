@@ -30,6 +30,10 @@ window.WaveSurfer =
   changeFilterGain: (e) -> @backend.changeFilterGain e
   toggleFilter: (e) -> @backend.toggleFilter e
 
+  bind: (event, cb) -> @backend.bind event, cb
+  getSpectrum: -> @backend.getSpectrum()
+  getWaveform: -> @backend.getWaveform()
+
   resize: (wfactor, hfactor) ->
     @drawer.resize wfactor, hfactor, @backend.getPlayedPercents()
 

@@ -7,7 +7,7 @@ class mixer.Views.TrackView extends Backbone.View
     @wavesurfer = Object.create(WaveSurfer)
 
     @wavesurfer.init
-      canvas: @$('canvas').get(0)
+      canvas: @$('.waveform').get(0)
       markerColor: 'rgba(0, 0, 0, 0.5)'
       frameMargin: 0.1
       maxSecPerPx: 1
@@ -20,16 +20,16 @@ class mixer.Views.TrackView extends Backbone.View
 
     $bpm = @$('.bpm')
 
-    i = 0
+    @i = 0
     initial = 0
     @kick = @wavesurfer.createKick
       frequency: [ 0, 10 ]
       threshold: 0.5
       decay: 0.005
       onKick: (m, t) =>
-        @showBeats i++
+        @showBeats @i++
         initial = t if initial is 0
-        $bpm.html (i/(t - initial) * 60).toString().slice(0, 5)
+        $bpm.html (@i/(t - initial) * 60).toString().slice(0, 5)
       # offKick: (e) -> console.log 'kick off'
 
     @wavesurfer.load options.url,
@@ -83,6 +83,33 @@ class mixer.Views.TrackView extends Backbone.View
       value: 0
       formater: (v) =>
         (@wavesurfer.changeFilterGain v).toString().slice(0, 4)
+
+
+    fftCanvas = @$('.fft').get(0)
+    ctx = fftCanvas.getContext '2d'
+    h = fftCanvas.height
+    w = fftCanvas.width
+    width = 2
+    spacing = 0
+    count = 512
+    ctx.fillStyle = '#000'
+
+    @wavesurfer.bind 'update', =>
+      spectrum = @wavesurfer.getSpectrum()
+      max = _.max spectrum
+      return if max == 0
+
+      ctx.clearRect 0, 0, w, h
+
+      l = Math.min spectrum.length, count
+      index = 0
+
+      spectrum = _.map spectrum, (x) -> x/max
+
+      while index < l
+        hh = spectrum[index] * h
+        ctx.fillRect index * (spacing + width), h, width, -hh
+        index++
 
   events:
     'click .icon-backward': 'onBackward'

@@ -2,7 +2,6 @@ WaveSurfer.WebAudio =
   Defaults:
     fftSize: 2048
     sampleRate: 44100
-    QualityMultiplier: 1000
     gainMultiplier: 40
     smoothingTimeConstant: 0.3
 
@@ -54,17 +53,7 @@ WaveSurfer.WebAudio =
 
     # Clamp the frequency between the minimum value (40 Hz) and half of the
     # sampling rate.
-    minValue = 40
-    maxValue = @Defaults.sampleRate / 2
-
-    # Logarithm (base 2) to compute how many octaves fall in the range.
-    numberOfOctaves = Math.log(maxValue / minValue) / Math.LN2
-
-    # Compute a multiplier from 0 to 1 based on an exponential scale.
-    multiplier = Math.pow(2, numberOfOctaves * (value - 1.0))
-
-    # Get back to the frequency value between min and max.
-    frequency = maxValue * multiplier
+    frequency = mixer.log value, 40, @Defaults.sampleRate / 2
     @filter.frequency.value = frequency
 
     frequency
@@ -77,9 +66,7 @@ WaveSurfer.WebAudio =
     minValue = 0.0001
     maxValue = 1000
 
-    numberOfOctaves = Math.log(maxValue / minValue) / Math.LN2
-    multiplier = Math.pow(2, numberOfOctaves * (value - 1.0))
-    Q = multiplier * @Defaults.QualityMultiplier
+    Q = mixer.log value, 0.0001, 1000
     @filter.Q.value = Q
     Q
 
