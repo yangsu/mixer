@@ -236,6 +236,7 @@ WaveSurfer.WebAudio =
     @lastStart = start
     @startTime = @context.currentTime
     @source.noteGrainOn delay, start, end - start
+    @source.loop = true
     @paused = false
 
 
