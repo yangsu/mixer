@@ -26,7 +26,7 @@ module.exports = function(grunt) {
     yeoman: yeomanConfig,
     watch: {
       coffee: {
-        files: ['<%= yeoman.app %>/scripts/{,*/}*.coffee'],
+        files: ['<%= yeoman.app %>/scripts/{,*/,*/*/}*.coffee'],
         tasks: ['coffee:dist']
       },
       coffeeTest: {
@@ -47,7 +47,7 @@ module.exports = function(grunt) {
         files: [
           '<%= yeoman.app %>/*.html',
           '{.tmp,<%= yeoman.app %>}/styles/{,*/}*.css',
-          '{.tmp,<%= yeoman.app %>}/scripts/{,*/}*.js',
+          '{.tmp,<%= yeoman.app %>}/scripts/{,*/,*/*/}*.js',
           '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp}'
         ],
         tasks: ['livereload']
@@ -125,7 +125,7 @@ module.exports = function(grunt) {
           // require them into your main .coffee file
           expand: true,
           cwd: '<%= yeoman.app %>/scripts',
-          src: '{,*/}*.coffee',
+          src: '{,*/,*/*/}*.coffee',
           dest: '.tmp/scripts',
           ext: '.js'
         }]

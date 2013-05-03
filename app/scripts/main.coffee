@@ -29,10 +29,10 @@ GLOBAL.mixer =
           volume: 50
         });
 
-    WebAudio.loadSound audioFileUrl, (buffer) =>
-      source = WebAudio.createSound(buffer)
+    mixer.WebAudio.loadSound audioFileUrl, (buffer) =>
+      source = mixer.WebAudio.createSound(buffer)
 
-      WebAudio.playSound source
+      mixer.WebAudio.playSound source
 
 $ ->
   mixer.init()
