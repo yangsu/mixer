@@ -159,9 +159,7 @@ WaveSurfer.WebAudio =
       _.each @bindings.update, (f) => f e, @getCurrentTime()
 
       callback e if callback?
-      if @getPlayedPercents() > 1.0
-        @pause()
-        @lastPause = 0
+      @stop() if @getPlayedPercents() > 1.0
 
   ###
   Loads audiobuffer.
@@ -179,8 +177,7 @@ WaveSurfer.WebAudio =
       cb buffer if cb?
     ), Error
 
-  isPaused: ->
-    @paused
+  isPaused: -> @paused
 
   getDuration: ->
     @currentBuffer and @currentBuffer.duration
@@ -196,7 +193,7 @@ WaveSurfer.WebAudio =
   relative to the beginning of the track.
   ###
   play: (start, end, delay = 0) ->
-    return  unless @currentBuffer
+    return unless @currentBuffer
     @pause()
     @setSource @context.createBufferSource()
     @source.buffer = @currentBuffer
@@ -209,14 +206,18 @@ WaveSurfer.WebAudio =
     @source.loop = true
     @paused = false
 
+  stop: ->
+    @play 0, 0
+    @source.loop = false
+    @pause()
+    # @lastStart = 0
+    # @lastPause = 0
+    # @startTime = null
 
-  ###
-  Pauses the loaded audio.
-  ###
-  pause: (delay) ->
+  pause: (delay = 0) ->
     return if not @currentBuffer or @paused
     @lastPause = @getCurrentTime()
-    @source.noteOff delay or 0
+    @source.noteOff delay
     @paused = true
 
   getPlayedPercents: ->

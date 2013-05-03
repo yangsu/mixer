@@ -42,8 +42,10 @@ window.WaveSurfer =
   playAt: (percents = 0) ->
     @backend.play @backend.getDuration() * percents
 
-  pause: ->
-    @backend.pause()
+  pause: -> @backend.pause()
+  stop: ->
+    # @playAt()
+    @backend.stop()
 
   playPause: ->
     if @backend.paused

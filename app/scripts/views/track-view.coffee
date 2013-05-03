@@ -123,6 +123,7 @@ class mixer.Views.TrackView extends Backbone.View
   events:
     'click .icon-backward': 'onBackward'
     'click .icon-play': 'onPlay'
+    'click .icon-stop': 'onStop'
     'click .icon-pause': 'onPause'
     'click .icon-forward': 'onForward'
     'click .icon-resize-full': 'onZoomIn'
@@ -154,6 +155,8 @@ class mixer.Views.TrackView extends Backbone.View
     @wavesurfer.resize 0.75
   onSeek: (e) ->
     @showPause()
+  onStop: (e) ->
+    @wavesurfer.stop()
 
   onChangeFilterType: (e) ->
     type = $(e.currentTarget).val()
