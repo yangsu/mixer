@@ -6,7 +6,10 @@
     "modernizr": "~2.6.2",
     "jquery": "~1.9.1",
     "lodash": "~1.0.1",
-    "backbone": "~1.0.0"
+    "backbone": "~1.0.0",
+    "dsp.js": "latest",
+    "soundmanager": "latest",
+    "jquery-knob": "~1.2.2"
   },
   "devDependencies": {}
 }
