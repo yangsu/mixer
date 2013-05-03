@@ -47,6 +47,9 @@ window.WaveSurfer =
     timings = @timings(offset)
     @playAt timings[0] / timings[1]
 
+  setVolume: (volume) -> @backend.setVolume volume
+  getVolume: () -> @backend.getVolume()
+
   marks: 0
   mark: (options) ->
     options = options or {}

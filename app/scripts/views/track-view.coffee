@@ -25,6 +25,24 @@ class mixer.Views.TrackView extends Backbone.View
 
     @wavesurfer.bindDragNDrop @$el.get(0)
 
+    @$('.slider').slider
+      min: 0
+      max: 1
+      step: 0.1
+      value: 1
+      formater: (v) -> v.toString().slice(0, 4)
+    .on 'slide', (e) =>
+      if 0 == e.value
+        el = '<i class="icon-volume-off"></i>'
+      else if 0 < e.value < 0.5
+        el = '<i class="icon-volume-down"></i>'
+      else
+        el = '<i class="icon-volume-up"></i>'
+
+      @$('.volume').children().replaceWith $ el
+
+      @wavesurfer.setVolume e.value
+
   events:
     'click .icon-backward': 'onBackward'
     'click .icon-play': 'onPlay'
@@ -50,12 +68,9 @@ class mixer.Views.TrackView extends Backbone.View
   onForward: (e) ->
     @showPause()
     @wavesurfer.skipForward()
-
   onZoomIn: (e) ->
-    @wavesurfer.resize 1.2
-
+    @wavesurfer.resize 1.5
   onZoomOut: (e) ->
-    @wavesurfer.resize 0.8
-
+    @wavesurfer.resize 0.75
   onSeek: (e) ->
     @showPause()

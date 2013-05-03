@@ -11,17 +11,27 @@ WaveSurfer.WebAudio =
   @param {Object} params
   @param {String} params.smoothingTimeConstant
   ###
-  init: (params) ->
-    params = params or {}
+  init: (params = {}) ->
+
     @fftSize = params.fftSize or @Defaults.fftSize
+
     @destination = params.destination or @context.destination
+    smoothingTimeConstant = params.smoothingTimeConstant or @Defaults.smoothingTimeConstant
+
+    @gain = @context.createGainNode()
+    @gain.connect @destination
+
     @analyser = @context.createAnalyser()
-    @analyser.smoothingTimeConstant = params.smoothingTimeConstant or @Defaults.smoothingTimeConstant
+    @analyser.smoothingTimeConstant = smoothingTimeConstant
     @analyser.fftSize = @fftSize
-    @analyser.connect @destination
+    @analyser.connect @gain
+
     @proc = @context.createJavaScriptNode(@fftSize / 2, 1, 1)
-    @proc.connect @destination
+    @proc.connect @gain
+
+
     @dataArray = new Uint8Array(@analyser.fftSize)
+
     @paused = true
 
   bindUpdate: (callback) ->
@@ -36,7 +46,13 @@ WaveSurfer.WebAudio =
     @source = source
     @source.connect @analyser
     @source.connect @proc
+    @source.connect @gain
 
+  setVolume: (volume = 1) ->
+    @gain.gain.value = volume
+
+  getVolume: () ->
+    @gain.gain.value
 
   ###
   Loads audiobuffer.

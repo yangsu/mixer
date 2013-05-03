@@ -12,4 +12,13 @@
   canvas {
     display: block;
   }
+
+  .btn-group {
+    & > .volume, & > .slider {
+      vertical-align: bottom;
+    }
+    .slider {
+      margin: 0 10px;
+    }
+  }
 }
