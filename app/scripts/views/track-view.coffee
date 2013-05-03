@@ -22,7 +22,6 @@ class mixer.Views.TrackView extends Backbone.View
       progress: ->
       load: =>
         @$('.disabled').removeClass 'disabled'
-        @loaded = true
 
     @wavesurfer.bindDragNDrop @$el.get(0)
 
@@ -31,6 +30,8 @@ class mixer.Views.TrackView extends Backbone.View
     'click .icon-play': 'onPlay'
     'click .icon-pause': 'onPause'
     'click .icon-forward': 'onForward'
+    'click .icon-resize-full': 'onZoomIn'
+    'click .icon-resize-small': 'onZoomOut'
     'click canvas': 'onSeek'
 
   showPlay: ->
@@ -38,21 +39,23 @@ class mixer.Views.TrackView extends Backbone.View
   showPause: ->
     @$('.icon-play').replaceWith $ '<i class="icon-pause"></i>'
   onBackward: (e) ->
-    return if not @loaded
     @showPause()
     @wavesurfer.skipBackward()
   onPlay: (e) ->
-    return if not @loaded
     @showPause()
     @wavesurfer.playPause()
   onPause: (e) ->
-    return if not @loaded
     @showPlay()
     @wavesurfer.playPause()
   onForward: (e) ->
-    return if not @loaded
     @showPause()
     @wavesurfer.skipForward()
+
+  onZoomIn: (e) ->
+    @wavesurfer.resize 1.2
+
+  onZoomOut: (e) ->
+    @wavesurfer.resize 0.8
 
   onSeek: (e) ->
     @showPause()

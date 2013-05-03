@@ -22,7 +22,10 @@ window.WaveSurfer =
   onAudioProcess: ->
     @drawer.progress @backend.getPlayedPercents()  unless @backend.isPaused()
 
-  playAt: (percents) ->
+  resize: (wfactor, hfactor) ->
+    @drawer.resize wfactor, hfactor, @backend.getPlayedPercents()
+
+  playAt: (percents = 0) ->
     @backend.play @backend.getDuration() * percents
 
   pause: ->
@@ -30,7 +33,7 @@ window.WaveSurfer =
 
   playPause: ->
     if @backend.paused
-      @playAt @backend.getPlayedPercents() or 0
+      @playAt @backend.getPlayedPercents()
     else
       @pause()
 
@@ -89,7 +92,7 @@ window.WaveSurfer =
     xhr.addEventListener 'load', ((e) =>
       @drawer.drawLoading 1
       @backend.loadData e.target.response, (buffer) =>
-        @drawBuffer()
+        @drawBuffer(buffer)
         options.load buffer if options.load?
     ), false
     xhr.open 'GET', src, true
@@ -103,7 +106,7 @@ window.WaveSurfer =
     reader = new FileReader()
     reader.addEventListener 'load', ((e) =>
       @backend.loadData e.target.result, (buffer) =>
-        @drawBuffer()
+        @drawBuffer(buffer)
         options.load buffer if options.load?
     ), false
     (dropTarget or document).addEventListener 'drop', ((e) ->

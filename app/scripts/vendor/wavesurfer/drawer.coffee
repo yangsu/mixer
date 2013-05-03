@@ -33,18 +33,19 @@ WaveSurfer.Drawer =
     @prepareContext()
     @loadImage params.image, @drawImage.bind(this)  if params.image
 
-  prepareContext: ->
-    canvas = @canvas
-    w = canvas.clientWidth
-    h = canvas.clientHeight
-    @width = canvas.width = w * @scale
-    @height = canvas.height = h * @scale
-    canvas.style.width = w + 'px'
-    canvas.style.height = h + 'px'
-    @context = canvas.getContext('2d')
+  resize: (wfactor = 1, hfactor = 1, percentage = 0) ->
+    @prepareContext wfactor * @width, hfactor * @height
+    @drawBuffer @buffer, percentage
+
+  prepareContext: (w = @canvas.clientWidth, h = @canvas.clientHeight) ->
+    @width = @canvas.width = w * @scale
+    @height = @canvas.height = h * @scale
+    @canvas.style.width = w + 'px'
+    @canvas.style.height = h + 'px'
+    @context = @canvas.getContext('2d')
     console.error 'Canvas size is zero.'  if not @width or not @height
 
-  getPeaks: (buffer) ->
+  getPeaks: (buffer = @buffer) ->
     frames = buffer.getChannelData(0).length
 
     # Frames per pixel
@@ -101,9 +102,10 @@ WaveSurfer.Drawer =
         target = @parent.scrollLeft + offset
       @canvas.parentNode.scrollLeft = ~~target
 
-  drawBuffer: (buffer) ->
+  drawBuffer: (buffer = @buffer, percentage = 0) ->
+    @buffer = buffer
     @getPeaks buffer
-    @progress 0
+    @progress percentage
 
 
   ###

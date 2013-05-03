@@ -1,5 +1,15 @@
 @import 'sass-bootstrap/lib/bootstrap';
 
-canvas {
-  display: block;
+.track-container {
+  .track, canvas {
+    margin: 0;
+  }
+
+  .track {
+    overflow-x: scroll;
+  }
+
+  canvas {
+    display: block;
+  }
 }
