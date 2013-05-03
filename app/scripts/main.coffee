@@ -18,7 +18,7 @@ GLOBAL.mixer =
 
   init: ->
 
-    audioFileUrl = 'files/WalterWhite.mp3'
+    audioFileUrl = 'files/GetLucky.mp3'
     audioFileUrl2 = 'files/Superliminal.mp3'
 
     track1 = new mixer.Views.TrackView
