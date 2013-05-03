@@ -23,63 +23,34 @@ WaveSurfer.WebAudio =
     smoothingTimeConstant = params.smoothingTimeConstant or @Defaults.smoothingTimeConstant
     sampleRate = params.sampleRate ? @Defaults.sampleRate
 
-    @tuna = new Tuna(@context)
+    @gain = @context.createGainNode()
 
     @filter = @context.createBiquadFilter()
     @filter.type = 0 # lowpass
     @filter.frequency.value = sampleRate / 2;
 
-    @gain = @context.createGainNode()
-    @gain.connect @filter
+    @passthrough = @context.createGainNode()
 
-
-    # @chorus = new @tuna.Phaser
-    #   rate: 1.2 #0.01 to 8 is a decent range, but higher values are possible
-    #   depth: 0.3 #0 to 1
-    #   feedback: 0.2 #0 to 1+
-    #   stereoPhase: 30 #0 to 180
-    #   baseModulationFrequency: 700 #500 to 1500
-    #   bypass: 0
-
+    @tuna = new Tuna(@context)
     @chorus = new @tuna.Chorus
       rate: 2 #0.01 to 8+
       feedback: 0.5 #0 to 1+
       delay: 0.45 #0 to 1
       bypass: 0 #the value 1 starts the effect as bypassed, 0 or 1
 
-    # @chorus = new @tuna.Tremolo
-    #   intensity: 0.3,    # 0 to 1
-    #   rate: 0.1,         # 0.001 to 8
-    #   stereoPhase: 0,    # 0 to 180
-    #   bypass: 0
-
-    # @chorus = new @tuna.WahWah
-    #   automode: true,                # true/false
-    #   baseFrequency: 0.5,            # 0 to 1
-    #   excursionOctaves: 2,           # 1 to 6
-    #   sweep: 0.2,                    # 0 to 1
-    #   resonance: 10,                 # 1 to 100
-    #   sensitivity: 0.5,              # -1 to 1
-    #   bypass: 0
-
-    # @chorus = new @tuna.Delay
-    #   feedback: 1 #0 to 1+
-    #   delayTime: 150 #how many milliseconds should the wet signal be delayed?
-    #   wetLevel: 0.25 #0 to 1+
-    #   dryLevel: 1 #0 to 1+
-    #   cutoff: 20 #cutoff frequency of the built in highpass-filter. 20 to 22050
-    #   bypass: 0
-
-    @filter.connect @chorus.input
-    @chorus.connect @destination
-
     @analyser = @context.createAnalyser()
     @analyser.smoothingTimeConstant = smoothingTimeConstant
     @analyser.fftSize = @fftSize
-    @analyser.connect @gain
 
     @proc = @context.createJavaScriptNode(@fftSize / 2, 1, 1)
-    @proc.connect @gain
+
+    @filter.connect @passthrough
+    @passthrough.connect @chorus.input
+    @chorus.connect @gain
+    @gain.connect @analyser
+    @gain.connect @proc
+    @proc.connect @destination
+    @analyser.connect @destination
 
     @dataArray = new Uint8Array(@analyser.fftSize)
 
@@ -87,6 +58,18 @@ WaveSurfer.WebAudio =
 
     @fft = new FFT(@fftSize / 2, sampleRate)
     @signal = new Float32Array(@fftSize / 2)
+
+
+  setSource: (source) ->
+    @source and @source.disconnect(0)
+    @source = source
+    @source.connect @filter
+
+  setVolume: (volume = 1) ->
+    @gain.gain.value = volume
+
+  getVolume: () ->
+    @gain.gain.value
 
   setPlaybackRate: (speed) ->
     @source.playbackRate.value = speed if @source?
@@ -118,22 +101,22 @@ WaveSurfer.WebAudio =
     g
 
   toggleFilter: (checked) ->
-    @gain.disconnect(0)
+    @source.disconnect(0)
     @filter.disconnect(0)
     if checked
-      @gain.connect(@filter)
-      @filter.connect(@destination)
+      @source.connect @filter
+      @filter.connect @passthrough
     else
-      @gain.connect(@destination)
+      @source.connect @passthrough
 
   toggleChorus: (checked) ->
+    @passthrough.disconnect(0)
     @chorus.disconnect(0)
-    @filter.disconnect(0)
     if checked
-      @filter.connect @chorus.input
-      @chorus.connect @destination
+      @passthrough.connect @chorus.input
+      @chorus.connect @gain
     else
-      @filter.connect(@destination)
+      @passthrough.connect @gain
 
   processFFT: (e) ->
     return if @paused or not @loaded
@@ -179,19 +162,6 @@ WaveSurfer.WebAudio =
       if @getPlayedPercents() > 1.0
         @pause()
         @lastPause = 0
-
-  setSource: (source) ->
-    @source and @source.disconnect()
-    @source = source
-    @source.connect @analyser
-    @source.connect @proc
-    @source.connect @gain
-
-  setVolume: (volume = 1) ->
-    @gain.gain.value = volume
-
-  getVolume: () ->
-    @gain.gain.value
 
   ###
   Loads audiobuffer.
