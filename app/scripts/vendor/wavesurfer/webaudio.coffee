@@ -31,16 +31,17 @@ WaveSurfer.WebAudio =
     @filter.frequency.value = sampleRate / 2;
 
     @gain = @context.createGainNode()
-    @filter.connect @gain
-    @gain.connect @destination
+    @gain.connect @filter
+
+    @filter.connect @destination
 
     @analyser = @context.createAnalyser()
     @analyser.smoothingTimeConstant = smoothingTimeConstant
     @analyser.fftSize = @fftSize
-    @analyser.connect @filter
+    @analyser.connect @gain
 
     @proc = @context.createJavaScriptNode(@fftSize / 2, 1, 1)
-    @proc.connect @filter
+    @proc.connect @gain
 
     @dataArray = new Uint8Array(@analyser.fftSize)
 
@@ -72,7 +73,13 @@ WaveSurfer.WebAudio =
     @filter.type = value
 
   changeFilterQuality: (value) ->
-    Q = value * @Defaults.QualityMultiplier
+
+    minValue = 0.0001
+    maxValue = 1000
+
+    numberOfOctaves = Math.log(maxValue / minValue) / Math.LN2
+    multiplier = Math.pow(2, numberOfOctaves * (value - 1.0))
+    Q = multiplier * @Defaults.QualityMultiplier
     @filter.Q.value = Q
     Q
 
@@ -80,6 +87,15 @@ WaveSurfer.WebAudio =
     g = value * @Defaults.gainMultiplier
     @filter.gain.value = g
     g
+
+  toggleFilter: (checked) ->
+    @gain.disconnect(0)
+    @filter.disconnect(0)
+    if checked
+      @gain.connect(@filter)
+      @filter.connect(@destination)
+    else
+      @gain.connect(@destination)
 
   processFFT: (e) ->
     return if @paused or not @loaded
@@ -131,7 +147,7 @@ WaveSurfer.WebAudio =
     @source = source
     @source.connect @analyser
     @source.connect @proc
-    @source.connect @filter
+    @source.connect @gain
 
   setVolume: (volume = 1) ->
     @gain.gain.value = volume

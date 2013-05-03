@@ -28,19 +28,23 @@
     </div>
 </div>
 <div class="row">
-    <label for="filtertype"></label>
+    <label for="enableFilter">Enable Filter:</label>
+    <input type="checkbox" id="enableFilter" checked>
+    <label for="filtertype">Filter Type:</label>
     <select name="type" id="filtertype">
         <option value="lowpass">Lowpass</option>
         <option value="highpass">Highpass</option>
         <option value="bandpass">Bandpass</option>
-        <option value="lowshelf">No Filter</option>
         <option value="lowshelf">Lowshelf</option>
         <option value="highshelf">Highshelf</option>
         <option value="peaking">Peaking</option>
         <option value="notch">Notch</option>
         <option value="allpass">Allpass</option>
     </select>
-    <div class="fslider" style=""></div>
-    <div class="qslider" style=""></div>
-    <div class="gslider" style=""></div>
+    <label for="fslider">Frequency Cutoff:</label>
+    <div class=".fslider" style=""></div>
+    <label for="qslider">Q Factor:</label>
+    <div class=".qslider" style=""></div>
+    <label for="gslider">Gain:</label>
+    <div class=".gslider" style=""></div>
 </div>

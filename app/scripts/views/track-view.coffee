@@ -74,7 +74,7 @@ class mixer.Views.TrackView extends Backbone.View
       step: 0.01
       value: 1
       formater: (v) =>
-        (@wavesurfer.changeFilterQuality v).toString().slice(0, 4)
+        (@wavesurfer.changeFilterQuality v).toString().slice(0, 7)
 
     @$('.gslider').slider
       min: -1
@@ -93,6 +93,7 @@ class mixer.Views.TrackView extends Backbone.View
     'click .icon-resize-small': 'onZoomOut'
     'click canvas': 'onSeek'
     'change #filtertype': 'onChangeFilterType'
+    'change #enableFilter': 'onToggleFilter'
 
   showPlay: ->
     @$('.icon-pause').replaceWith $ '<i class="icon-play"></i>'
@@ -120,6 +121,10 @@ class mixer.Views.TrackView extends Backbone.View
   onChangeFilterType: (e) ->
     type = $(e.currentTarget).val()
     @wavesurfer.changeFilterType type
+
+  onToggleFilter: (e) ->
+    checked = $(e.currentTarget).prop('checked')
+    @wavesurfer.toggleFilter checked
 
   showBeats: (i) ->
     @wavesurfer.mark
