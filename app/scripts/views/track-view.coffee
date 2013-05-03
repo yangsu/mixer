@@ -89,10 +89,9 @@ class mixer.Views.TrackView extends Backbone.View
     ctx = fftCanvas.getContext '2d'
     h = fftCanvas.height
     w = fftCanvas.width
-    width = 2
-    spacing = 0
-    count = 512
-    ctx.fillStyle = '#000'
+    width = 1
+    spacing = 1
+    ctx.fillStyle = 'orange'
 
     @wavesurfer.bind 'update', =>
       spectrum = @wavesurfer.getSpectrum()
@@ -101,10 +100,10 @@ class mixer.Views.TrackView extends Backbone.View
 
       ctx.clearRect 0, 0, w, h
 
-      l = Math.min spectrum.length, count
+      l = spectrum.length
       index = 0
 
-      spectrum = _.map spectrum, (x) -> x/max
+      spectrum = _.map spectrum, (x) -> x/0.1
 
       while index < l
         hh = spectrum[index] * h
