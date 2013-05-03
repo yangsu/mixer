@@ -19,6 +19,7 @@ class mixer.Views.TrackView extends Backbone.View
       cursorColor: 'navy'
 
     $bpm = @$('.bpm')
+
     i = 0
     initial = 0
     @kick = @wavesurfer.createKick
@@ -28,7 +29,6 @@ class mixer.Views.TrackView extends Backbone.View
       onKick: (m, t) =>
         @showBeats i++
         initial = t if initial is 0
-        console.log i, t - initial
         $bpm.html (i/(t - initial) * 60).toString().slice(0, 5)
       # offKick: (e) -> console.log 'kick off'
 
@@ -39,8 +39,6 @@ class mixer.Views.TrackView extends Backbone.View
         @$('.disabled').removeClass 'disabled'
 
     @wavesurfer.bindDragNDrop @$el.get(0)
-
-
 
     @$('.slider').slider
       min: 0
@@ -60,6 +58,24 @@ class mixer.Views.TrackView extends Backbone.View
 
       @wavesurfer.setVolume e.value
 
+    @$('.fslider').slider
+      min: 0
+      max: 1
+      step: 0.01
+      value: 1
+      formater: (v) =>
+        f = (@wavesurfer.changeFilterFrequency v).toString()
+        decimal = f.indexOf('.')
+        f.slice(0, if decimal < 0 then f.length else decimal + 2) + 'Hz'
+
+    @$('.qslider').slider
+      min: 0
+      max: 1
+      step: 0.01
+      value: 1
+      formater: (v) =>
+        (@wavesurfer.changeFilterQuality v).toString().slice(0, 4)
+
   events:
     'click .icon-backward': 'onBackward'
     'click .icon-play': 'onPlay'
@@ -68,6 +84,7 @@ class mixer.Views.TrackView extends Backbone.View
     'click .icon-resize-full': 'onZoomIn'
     'click .icon-resize-small': 'onZoomOut'
     'click canvas': 'onSeek'
+    'change #filtertype': 'onChangeFilterType'
 
   showPlay: ->
     @$('.icon-pause').replaceWith $ '<i class="icon-play"></i>'
@@ -91,6 +108,10 @@ class mixer.Views.TrackView extends Backbone.View
     @wavesurfer.resize 0.75
   onSeek: (e) ->
     @showPause()
+
+  onChangeFilterType: (e) ->
+    type = $(e.currentTarget).val()
+    @wavesurfer.changeFilterType type
 
   showBeats: (i) ->
     @wavesurfer.mark

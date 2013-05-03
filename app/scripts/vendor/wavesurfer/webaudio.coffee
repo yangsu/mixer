@@ -2,6 +2,7 @@ WaveSurfer.WebAudio =
   Defaults:
     fftSize: 2048
     sampleRate: 44100
+    QualityMultiplier: 30
     smoothingTimeConstant: 0.3
 
   bindings: {}
@@ -22,16 +23,23 @@ WaveSurfer.WebAudio =
     smoothingTimeConstant = params.smoothingTimeConstant or @Defaults.smoothingTimeConstant
     sampleRate = params.sampleRate ? @Defaults.sampleRate
 
+    @tuna = new Tuna(@context)
+
+    @filter = @context.createBiquadFilter()
+    @filter.type = 0 # lowpass
+    @filter.frequency.value = sampleRate / 2;
+
     @gain = @context.createGainNode()
+    @filter.connect @gain
     @gain.connect @destination
 
     @analyser = @context.createAnalyser()
     @analyser.smoothingTimeConstant = smoothingTimeConstant
     @analyser.fftSize = @fftSize
-    @analyser.connect @gain
+    @analyser.connect @filter
 
     @proc = @context.createJavaScriptNode(@fftSize / 2, 1, 1)
-    @proc.connect @gain
+    @proc.connect @filter
 
     @dataArray = new Uint8Array(@analyser.fftSize)
 
@@ -39,6 +47,33 @@ WaveSurfer.WebAudio =
 
     @fft = new FFT(@fftSize / 2, sampleRate)
     @signal = new Float32Array(@fftSize / 2)
+
+  changeFilterFrequency: (value) ->
+
+    # Clamp the frequency between the minimum value (40 Hz) and half of the
+    # sampling rate.
+    minValue = 40
+    maxValue = @Defaults.sampleRate / 2
+
+    # Logarithm (base 2) to compute how many octaves fall in the range.
+    numberOfOctaves = Math.log(maxValue / minValue) / Math.LN2
+
+    # Compute a multiplier from 0 to 1 based on an exponential scale.
+    multiplier = Math.pow(2, numberOfOctaves * (value - 1.0))
+
+    # Get back to the frequency value between min and max.
+    frequency = maxValue * multiplier
+    @filter.frequency.value = frequency
+
+    frequency
+
+  changeFilterType: (value) ->
+    @filter.type = value
+
+  changeFilterQuality: (value) ->
+    Q = value * @Defaults.QualityMultiplier
+    @filter.Q.value = Q
+    Q
 
   processFFT: (e) ->
     return if @paused or not @loaded
@@ -90,7 +125,7 @@ WaveSurfer.WebAudio =
     @source = source
     @source.connect @analyser
     @source.connect @proc
-    @source.connect @gain
+    @source.connect @filter
 
   setVolume: (volume = 1) ->
     @gain.gain.value = volume

@@ -24,6 +24,10 @@ window.WaveSurfer =
 
   createKick: (options) -> @backend.createKick options
 
+  changeFilterFrequency: (e) -> @backend.changeFilterFrequency e
+  changeFilterType: (e) -> @backend.changeFilterType e
+  changeFilterQuality: (e) -> @backend.changeFilterQuality e
+
   resize: (wfactor, hfactor) ->
     @drawer.resize wfactor, hfactor, @backend.getPlayedPercents()
 
