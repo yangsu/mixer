@@ -21,7 +21,29 @@ class mixer.Views.TrackView extends Backbone.View
 
     @wavesurfer.load options.url,
       progress: ->
-      load: ->
+      load: =>
+        @$('.disabled').removeClass 'disabled'
+        @loaded = true
 
     @wavesurfer.bindDragNDrop @$el.get(0)
 
+  events:
+    'click .icon-backward': 'onBackward'
+    'click .icon-play': 'onPlay'
+    'click .icon-pause': 'onPause'
+    'click .icon-forward': 'onForward'
+
+  onBackward: (e) ->
+    return if not @loaded
+    @wavesurfer.skipBackward()
+  onPlay: (e) ->
+    return if not @loaded
+    @$('.icon-play').replaceWith $ '<i class="icon-pause"></i>'
+    @wavesurfer.playPause()
+  onPause: (e) ->
+    return if not @loaded
+    @$('.icon-pause').replaceWith $ '<i class="icon-play"></i>'
+    @wavesurfer.playPause()
+  onForward: (e) ->
+    return if not @loaded
+    @wavesurfer.skipForward()

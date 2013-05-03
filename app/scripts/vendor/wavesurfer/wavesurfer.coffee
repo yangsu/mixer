@@ -90,8 +90,9 @@ window.WaveSurfer =
     ), false
     xhr.addEventListener 'load', ((e) =>
       @drawer.drawLoading 1
-      @backend.loadData e.target.response, @drawBuffer.bind(@)
-      options.load e.target.response if options.load?
+      @backend.loadData e.target.response, (buffer) =>
+        @drawBuffer()
+        options.load buffer if options.load?
     ), false
     xhr.open 'GET', src, true
     xhr.send()
@@ -103,7 +104,9 @@ window.WaveSurfer =
   bindDragNDrop: (dropTarget) ->
     reader = new FileReader()
     reader.addEventListener 'load', ((e) =>
-      @backend.loadData e.target.result, @drawBuffer.bind(@)
+      @backend.loadData e.target.result, (buffer) =>
+        @drawBuffer()
+        options.load buffer if options.load?
     ), false
     (dropTarget or document).addEventListener 'drop', ((e) ->
       e.preventDefault()
