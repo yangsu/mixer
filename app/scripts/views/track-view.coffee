@@ -130,6 +130,7 @@ class mixer.Views.TrackView extends Backbone.View
     'click canvas': 'onSeek'
     'change #filtertype': 'onChangeFilterType'
     'change #enableFilter': 'onToggleFilter'
+    'change #enableChorus': 'onToggleChorus'
 
   showPlay: ->
     @$('.icon-pause').replaceWith $ '<i class="icon-play"></i>'
@@ -161,6 +162,10 @@ class mixer.Views.TrackView extends Backbone.View
   onToggleFilter: (e) ->
     checked = $(e.currentTarget).prop('checked')
     @wavesurfer.toggleFilter checked
+
+  onToggleChorus: (e) ->
+    checked = $(e.currentTarget).prop('checked')
+    @wavesurfer.toggleChorus checked
 
   showBeats: (i) ->
     @wavesurfer.mark

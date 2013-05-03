@@ -32,7 +32,46 @@ WaveSurfer.WebAudio =
     @gain = @context.createGainNode()
     @gain.connect @filter
 
-    @filter.connect @destination
+
+    # @chorus = new @tuna.Phaser
+    #   rate: 1.2 #0.01 to 8 is a decent range, but higher values are possible
+    #   depth: 0.3 #0 to 1
+    #   feedback: 0.2 #0 to 1+
+    #   stereoPhase: 30 #0 to 180
+    #   baseModulationFrequency: 700 #500 to 1500
+    #   bypass: 0
+
+    @chorus = new @tuna.Chorus
+      rate: 2 #0.01 to 8+
+      feedback: 0.5 #0 to 1+
+      delay: 0.45 #0 to 1
+      bypass: 0 #the value 1 starts the effect as bypassed, 0 or 1
+
+    # @chorus = new @tuna.Tremolo
+    #   intensity: 0.3,    # 0 to 1
+    #   rate: 0.1,         # 0.001 to 8
+    #   stereoPhase: 0,    # 0 to 180
+    #   bypass: 0
+
+    # @chorus = new @tuna.WahWah
+    #   automode: true,                # true/false
+    #   baseFrequency: 0.5,            # 0 to 1
+    #   excursionOctaves: 2,           # 1 to 6
+    #   sweep: 0.2,                    # 0 to 1
+    #   resonance: 10,                 # 1 to 100
+    #   sensitivity: 0.5,              # -1 to 1
+    #   bypass: 0
+
+    # @chorus = new @tuna.Delay
+    #   feedback: 1 #0 to 1+
+    #   delayTime: 150 #how many milliseconds should the wet signal be delayed?
+    #   wetLevel: 0.25 #0 to 1+
+    #   dryLevel: 1 #0 to 1+
+    #   cutoff: 20 #cutoff frequency of the built in highpass-filter. 20 to 22050
+    #   bypass: 0
+
+    @filter.connect @chorus.input
+    @chorus.connect @destination
 
     @analyser = @context.createAnalyser()
     @analyser.smoothingTimeConstant = smoothingTimeConstant
@@ -86,6 +125,15 @@ WaveSurfer.WebAudio =
       @filter.connect(@destination)
     else
       @gain.connect(@destination)
+
+  toggleChorus: (checked) ->
+    @chorus.disconnect(0)
+    @filter.disconnect(0)
+    if checked
+      @filter.connect @chorus.input
+      @chorus.connect @destination
+    else
+      @filter.connect(@destination)
 
   processFFT: (e) ->
     return if @paused or not @loaded
