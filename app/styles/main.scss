@@ -1,7 +1,9 @@
 @import 'sass-bootstrap/lib/bootstrap';
 
 body {
-  background-color: #E0E0E0
+  background-color: #E0E0E0;
+  overflow-x: hidden;
+  margin-bottom: 50px;
 }
 .track-container {
   .track, canvas {
@@ -17,8 +19,8 @@ body {
   }
 
   .btn-group {
-    & > .volume, & > .slider {
-      vertical-align: bottom;
+    i {
+      vertical-align: top;
     }
     .slider {
       margin: 0 10px;

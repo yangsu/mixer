@@ -1,14 +1,16 @@
 <div class="row text-center track-container">
-    <div class="span2">
+    <div class="track span12">
+        <canvas class="waveform" width="5000" height="100"></canvas>
+    </div>
+    <canvas class="fft" width="1280" height="100"></canvas>
+</div>
+<div class="row">
+    <div class="span4">
         <div class="btn-toolbar">
           <div class="btn-group">
             <a class="btn disabled" href="#"><i class="icon-backward"></i></a>
             <a class="btn disabled" href="#"><i class="icon-play"></i></a>
             <a class="btn disabled" href="#"><i class="icon-forward"></i></a>
-          </div>
-        </div>
-        <div class="btn-toolbar">
-          <div class="btn-group">
             <a class="btn disabled" href="#"><i class="icon-resize-full"></i></a>
             <a class="btn disabled" href="#"><i class="icon-resize-small"></i></a>
           </div>
@@ -16,44 +18,42 @@
         <div class="btn-toolbar">
           <div class="btn-group">
             <span class="volume"><i class="icon-volume-up"></i></span>
-            <span class="vslider span1"></span>
+            <span class="vslider span3"></span>
           </div>
         </div>
         <div class="btn-toolbar">
           <div class="btn-group">
             <span class="speed"><i class="icon-time"></i></span>
-            <span class="sslider span1"></span>
+            <span class="sslider span3"></span>
           </div>
         </div>
         <div>
             BPM <span class="bpm">0</span>
         </div>
     </div>
-    <div class="track span10">
-        <canvas class="waveform" width="5000" height="50"></canvas>
+    <div class="span4">
+        <label for="filtertype">Filter Type:</label>
+        <select name="type" id="filtertype">
+            <option value="lowpass">Lowpass</option>
+            <option value="highpass">Highpass</option>
+            <option value="bandpass">Bandpass</option>
+            <option value="lowshelf">Lowshelf</option>
+            <option value="highshelf">Highshelf</option>
+            <option value="peaking">Peaking</option>
+            <option value="notch">Notch</option>
+            <option value="allpass">Allpass</option>
+        </select>
+        <label for="enableFilter">Enable Filter:</label>
+        <input type="checkbox" id="enableFilter" checked>
+        <label for="enableChorus">Enable Chorus:</label>
+        <input type="checkbox" id="enableChorus" checked>
     </div>
-    <canvas class="fft" width="780" height="50"></canvas>
-</div>
-<div class="row">
-    <label for="enableFilter">Enable Filter:</label>
-    <input type="checkbox" id="enableFilter" checked>
-    <label for="filtertype">Filter Type:</label>
-    <select name="type" id="filtertype">
-        <option value="lowpass">Lowpass</option>
-        <option value="highpass">Highpass</option>
-        <option value="bandpass">Bandpass</option>
-        <option value="lowshelf">Lowshelf</option>
-        <option value="highshelf">Highshelf</option>
-        <option value="peaking">Peaking</option>
-        <option value="notch">Notch</option>
-        <option value="allpass">Allpass</option>
-    </select>
-    <label for="fslider">Frequency Cutoff:</label>
-    <div class="fslider" style=""></div>
-    <label for="qslider">Q Factor:</label>
-    <div class="qslider" style=""></div>
-    <label for="gslider">Gain:</label>
-    <div class="gslider" style=""></div>
-    <label for="enableChorus">Enable Chorus:</label>
-    <input type="checkbox" id="enableChorus" checked>
+    <div class="span4">
+        <label for="fslider">Frequency Cutoff:</label>
+        <div class="fslider" style=""></div>
+        <label for="qslider">Q Factor:</label>
+        <div class="qslider" style=""></div>
+        <label for="gslider">Gain:</label>
+        <div class="gslider" style=""></div>
+    </div>
 </div>
