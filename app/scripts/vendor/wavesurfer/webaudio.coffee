@@ -2,7 +2,8 @@ WaveSurfer.WebAudio =
   Defaults:
     fftSize: 2048
     sampleRate: 44100
-    QualityMultiplier: 30
+    QualityMultiplier: 1000
+    gainMultiplier: 40
     smoothingTimeConstant: 0.3
 
   bindings: {}
@@ -74,6 +75,11 @@ WaveSurfer.WebAudio =
     Q = value * @Defaults.QualityMultiplier
     @filter.Q.value = Q
     Q
+
+  changeFilterGain: (value) ->
+    g = value * @Defaults.gainMultiplier
+    @filter.gain.value = g
+    g
 
   processFFT: (e) ->
     return if @paused or not @loaded

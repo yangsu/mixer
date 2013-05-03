@@ -76,6 +76,14 @@ class mixer.Views.TrackView extends Backbone.View
       formater: (v) =>
         (@wavesurfer.changeFilterQuality v).toString().slice(0, 4)
 
+    @$('.gslider').slider
+      min: -1
+      max: 1
+      step: 0.01
+      value: 0
+      formater: (v) =>
+        (@wavesurfer.changeFilterGain v).toString().slice(0, 4)
+
   events:
     'click .icon-backward': 'onBackward'
     'click .icon-play': 'onPlay'

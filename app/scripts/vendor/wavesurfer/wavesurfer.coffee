@@ -27,6 +27,7 @@ window.WaveSurfer =
   changeFilterFrequency: (e) -> @backend.changeFilterFrequency e
   changeFilterType: (e) -> @backend.changeFilterType e
   changeFilterQuality: (e) -> @backend.changeFilterQuality e
+  changeFilterGain: (e) -> @backend.changeFilterGain e
 
   resize: (wfactor, hfactor) ->
     @drawer.resize wfactor, hfactor, @backend.getPlayedPercents()
