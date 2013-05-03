@@ -48,7 +48,7 @@ module.exports = function(grunt) {
           '<%= yeoman.app %>/*.html',
           '{.tmp,<%= yeoman.app %>}/styles/{,*/}*.css',
           '{.tmp,<%= yeoman.app %>}/scripts/{,*/,*/*/}*.js',
-          '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp}'
+          '<%= yeoman.app %>/img/{,*/}*.{png,jpg,jpeg,gif,webp}'
         ],
         tasks: ['livereload']
       }
@@ -199,9 +199,9 @@ module.exports = function(grunt) {
       dist: {
         files: [{
           expand: true,
-          cwd: '<%= yeoman.app %>/images',
+          cwd: '<%= yeoman.app %>/img',
           src: '{,*/}*.{png,jpg,jpeg}',
-          dest: '<%= yeoman.dist %>/images'
+          dest: '<%= yeoman.dist %>/img'
         }]
       }
     },
@@ -246,7 +246,8 @@ module.exports = function(grunt) {
           src: [
             '*.{ico,txt}',
             '.htaccess',
-            'images/{,*/}*.{webp,gif}'
+            'img/{,*/}*.{webp,gif}',
+            'files/*.{mp3}'
           ]
         }]
       }
