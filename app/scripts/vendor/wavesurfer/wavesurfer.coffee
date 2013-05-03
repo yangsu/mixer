@@ -1,6 +1,5 @@
 window.WaveSurfer =
-  defaultParams:
-    skipLength: 2
+  skipLength: 2
 
   init: (params) ->
 
@@ -35,11 +34,11 @@ window.WaveSurfer =
     else
       @pause()
 
-  skipBackward: (seconds) ->
-    @skip seconds or -@skipLength
+  skipBackward: (seconds = -@skipLength) ->
+    @skip seconds
 
-  skipForward: (seconds) ->
-    @skip seconds or @skipLength
+  skipForward: (seconds = @skipLength) ->
+    @skip seconds
 
   skip: (offset) ->
     timings = @timings(offset)

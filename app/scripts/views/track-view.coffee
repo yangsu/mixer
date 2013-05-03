@@ -39,6 +39,7 @@ class mixer.Views.TrackView extends Backbone.View
     @$('.icon-play').replaceWith $ '<i class="icon-pause"></i>'
   onBackward: (e) ->
     return if not @loaded
+    @showPause()
     @wavesurfer.skipBackward()
   onPlay: (e) ->
     return if not @loaded
@@ -50,6 +51,7 @@ class mixer.Views.TrackView extends Backbone.View
     @wavesurfer.playPause()
   onForward: (e) ->
     return if not @loaded
+    @showPause()
     @wavesurfer.skipForward()
 
   onSeek: (e) ->
