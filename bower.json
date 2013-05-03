@@ -7,7 +7,6 @@
     "jquery": "~1.9.1",
     "lodash": "~1.0.1",
     "backbone": "~1.0.0",
-    "dsp.js": "latest",
     "jquery-knob": "~1.2.2"
   },
   "devDependencies": {}
