@@ -208,14 +208,9 @@ WaveSurfer.WebAudio =
 
   stop: ->
     @play 0, 0
-    @source.loop = false
-    @pause()
-    # @lastStart = 0
-    # @lastPause = 0
-    # @startTime = null
 
   pause: (delay = 0) ->
-    return if not @currentBuffer or @paused
+    return if not @currentBuffer? or @paused
     @lastPause = @getCurrentTime()
     @source.noteOff delay
     @paused = true
@@ -228,7 +223,6 @@ WaveSurfer.WebAudio =
       @lastPause
     else
       @lastStart + (@context.currentTime - @startTime)
-
 
   ###
   Returns the real-time waveform data.

@@ -46,6 +46,7 @@ window.WaveSurfer =
   stop: ->
     # @playAt()
     @backend.stop()
+    @drawer.redraw() if @backend.paused
 
   playPause: ->
     if @backend.paused
@@ -78,7 +79,7 @@ window.WaveSurfer =
 
     id = options.id or '_m' + @marks++
     @drawer.markers[id] = marker
-    @drawer.redraw()  if @backend.paused
+    @drawer.redraw() if @backend.paused
     marker
 
   timings: (offset) ->
