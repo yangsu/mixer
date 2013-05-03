@@ -22,6 +22,8 @@ window.WaveSurfer =
   onAudioProcess: ->
     @drawer.progress @backend.getPlayedPercents()  unless @backend.isPaused()
 
+  createKick: (options) -> @backend.createKick options
+
   resize: (wfactor, hfactor) ->
     @drawer.resize wfactor, hfactor, @backend.getPlayedPercents()
 

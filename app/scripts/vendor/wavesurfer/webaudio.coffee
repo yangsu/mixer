@@ -1,7 +1,10 @@
 WaveSurfer.WebAudio =
   Defaults:
-    fftSize: 1024
+    fftSize: 2048
+    sampleRate: 44100
     smoothingTimeConstant: 0.3
+
+  bindings: {}
 
   context: new (window.AudioContext or window.webkitAudioContext)
 
@@ -17,6 +20,7 @@ WaveSurfer.WebAudio =
 
     @destination = params.destination or @context.destination
     smoothingTimeConstant = params.smoothingTimeConstant or @Defaults.smoothingTimeConstant
+    sampleRate = params.sampleRate ? @Defaults.sampleRate
 
     @gain = @context.createGainNode()
     @gain.connect @destination
@@ -29,14 +33,54 @@ WaveSurfer.WebAudio =
     @proc = @context.createJavaScriptNode(@fftSize / 2, 1, 1)
     @proc.connect @gain
 
-
     @dataArray = new Uint8Array(@analyser.fftSize)
 
     @paused = true
 
+    @fft = new FFT(@fftSize / 2, sampleRate)
+    @signal = new Float32Array(@fftSize / 2)
+
+  processFFT: (e) ->
+    return if @paused or not @loaded
+
+    buffers = []
+    channels = e.inputBuffer.numberOfChannels
+    resolution = @fftSize / channels
+
+    sum = (prev, curr) -> prev[i] + curr[i]
+
+    i = channels
+    while i--
+      buffers.push e.inputBuffer.getChannelData(i)
+
+    i = resolution
+    while i--
+      if channels > 1
+        @signal[i] = buffers.reduce(sum) / channels
+      else
+        @signal[i] = buffers[0][i]
+
+    @fft.forward @signal
+
+  getWaveform: -> @signal
+  getSpectrum: -> @fft.spectrum
+
+  createKick: (options = {}) ->
+    new Dancer.Kick(@, options)
+
+  bind: (event, cb) ->
+    @bindings[event] ?= []
+    @bindings[event].push cb
+
   bindUpdate: (callback) ->
-    @proc.onaudioprocess = =>
-      callback() if callback?
+    @proc.onaudioprocess = (e) =>
+      return if @paused
+
+      @processFFT e
+
+      _.each @bindings.update, (f) -> f e
+
+      callback e if callback?
       if @getPlayedPercents() > 1.0
         @pause()
         @lastPause = 0
@@ -61,6 +105,7 @@ WaveSurfer.WebAudio =
   ###
   loadData: (audioData, cb) ->
     @pause()
+    @loaded = true
     @context.decodeAudioData audioData, ((buffer) =>
       @currentBuffer = buffer
       @lastStart = 0

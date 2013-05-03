@@ -18,12 +18,19 @@ class mixer.Views.TrackView extends Backbone.View
       loadingColor: 'orange'
       cursorColor: 'navy'
 
+    @kick = @wavesurfer.createKick
+      onKick: (e) -> console.log 'kick on'
+      offKick: (e) -> console.log 'kick off'
+
     @wavesurfer.load options.url,
       progress: ->
       load: =>
+        @kick.on()
         @$('.disabled').removeClass 'disabled'
 
     @wavesurfer.bindDragNDrop @$el.get(0)
+
+
 
     @$('.slider').slider
       min: 0
@@ -74,3 +81,8 @@ class mixer.Views.TrackView extends Backbone.View
     @wavesurfer.resize 0.75
   onSeek: (e) ->
     @showPause()
+
+  showBeats: (e) ->
+    @wavesurfer.mark
+      id: 'up'
+      color: 'rgba(0, 255, 0, 0.5)'
