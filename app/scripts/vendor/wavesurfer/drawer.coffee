@@ -79,8 +79,9 @@ WaveSurfer.Drawer =
         sum += peak
         c++
       @peaks[i] = sum
-      @maxPeak = sum  if sum > @maxPeak
+      @maxPeak = sum if sum > @maxPeak
       i++
+
     @maxPeak *= 1 + @params.frameMargin
 
   progress: (percents) ->

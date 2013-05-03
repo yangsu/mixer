@@ -74,7 +74,7 @@ window.WaveSurfer =
   ###
   Loads an audio file via XHR.
   ###
-  load: (src) ->
+  load: (src, options = {}) ->
     xhr = new XMLHttpRequest()
     xhr.responseType = 'arraybuffer'
     xhr.addEventListener 'progress', ((e) =>
@@ -86,10 +86,12 @@ window.WaveSurfer =
         # function, and assume downloads in the 1-3 MB range.
         percentComplete = e.loaded / (e.loaded + 1000000)
       @drawer.drawLoading percentComplete
+      options.progress percentComplete if options.progress?
     ), false
     xhr.addEventListener 'load', ((e) =>
       @drawer.drawLoading 1
       @backend.loadData e.target.response, @drawBuffer.bind(@)
+      options.load e.target.response if options.load?
     ), false
     xhr.open 'GET', src, true
     xhr.send()

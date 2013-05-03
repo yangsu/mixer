@@ -10,7 +10,8 @@ GLOBAL.mixer =
 
   init: ->
 
-    audioFileUrl = 'files/IO-5.0.mp3'
+    audioFileUrl = 'files/WalterWhite.mp3'
+    audioFileUrl2 = 'files/Superliminal.mp3'
 
     soundManager.setup
       url: 'components/soundmanager/swf/soundmanager2.swf'
@@ -29,10 +30,19 @@ GLOBAL.mixer =
           volume: 50
         });
 
-    mixer.WebAudio.loadSound audioFileUrl, (buffer) =>
-      source = mixer.WebAudio.createSound(buffer)
+    # mixer.WebAudio.loadSound audioFileUrl, (buffer) =>
+    #   source = mixer.WebAudio.createSound(buffer)
 
-      mixer.WebAudio.playSound source
+    #   mixer.WebAudio.playSound source
+
+    track1 = new mixer.Views.TrackView
+      el: '#track1'
+      url: audioFileUrl
+
+    track2 = new mixer.Views.TrackView
+      el: '#track2'
+      url: audioFileUrl2
+
 
 $ ->
   mixer.init()
