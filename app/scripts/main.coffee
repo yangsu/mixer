@@ -8,39 +8,6 @@ GLOBAL.mixer =
   Routers: {}
   Templates: {}
 
-  context: new webkitAudioContext()
-  loadSound: (url, cb) ->
-    xhr = new XMLHttpRequest()
-    xhr.open 'GET', url, true
-    xhr.responseType = 'arraybuffer'
-    xhr.onprogress = (ev) ->
-      $('.track.source').width ((ev.loaded / ev.total) * 100) + '%'
-
-    xhr.onload = =>
-      return unless xhr.readyState is 4
-      @context.decodeAudioData xhr.response, (buffer) ->
-        cb and cb(buffer)
-
-    mixer.request and mixer.request.abort()
-    mixer.request = xhr
-    xhr.send()
-
-  createSound: (buffer) ->
-    source = @context.createBufferSource()
-    source.buffer = buffer
-    source.connect @context.destination
-    source
-
-  playSound: (source, delay = 0, start, duration) ->
-    initialDelay = @context.currentTime + delay
-    if not start? or not duration?
-      source.noteOn initialDelay
-    else if start and duration
-      source.noteGrainOn initialDelay, start, duration
-
-  stopSound: (source, delay = 0) ->
-    source.noteOff @context.currentTime + delay
-
   init: ->
 
     audioFileUrl = 'files/IO-5.0.mp3'
@@ -62,10 +29,10 @@ GLOBAL.mixer =
           volume: 50
         });
 
-    @loadSound audioFileUrl, (buffer) =>
-      source = @createSound(buffer)
+    WebAudio.loadSound audioFileUrl, (buffer) =>
+      source = WebAudio.createSound(buffer)
 
-      @playSound source
+      WebAudio.playSound source
 
 $ ->
   mixer.init()
