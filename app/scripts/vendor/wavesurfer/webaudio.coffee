@@ -49,6 +49,9 @@ WaveSurfer.WebAudio =
     @fft = new FFT(@fftSize / 2, sampleRate)
     @signal = new Float32Array(@fftSize / 2)
 
+  setPlaybackRate: (speed) ->
+    @source.playbackRate.value = speed if @source?
+
   changeFilterFrequency: (value) ->
 
     # Clamp the frequency between the minimum value (40 Hz) and half of the

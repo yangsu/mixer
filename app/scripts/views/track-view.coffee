@@ -40,7 +40,17 @@ class mixer.Views.TrackView extends Backbone.View
 
     @wavesurfer.bindDragNDrop @$el.get(0)
 
-    @$('.slider').slider
+    @$('.sslider').slider
+      min: 0.1
+      max: 5
+      step: 0.1
+      value: 1
+      formater: (v) -> v.toString().slice(0, 4)
+    .on 'slide', (e) =>
+      @wavesurfer.setPlaybackRate e.value
+
+
+    @$('.vslider').slider
       min: 0
       max: 1
       step: 0.1

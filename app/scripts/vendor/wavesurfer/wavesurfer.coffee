@@ -29,6 +29,7 @@ window.WaveSurfer =
   changeFilterQuality: (e) -> @backend.changeFilterQuality e
   changeFilterGain: (e) -> @backend.changeFilterGain e
   toggleFilter: (e) -> @backend.toggleFilter e
+  setPlaybackRate: (e) -> @backend.setPlaybackRate e
 
   bind: (event, cb) -> @backend.bind event, cb
   getSpectrum: -> @backend.getSpectrum()
