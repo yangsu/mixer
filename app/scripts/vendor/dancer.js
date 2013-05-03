@@ -303,8 +303,8 @@
     this.currentThreshold = this.threshold;
 
     var _this = this;
-    this.dancer.bind( 'update', function () {
-      _this.onUpdate();
+    this.dancer.bind( 'update', function (e, time) {
+      _this.onUpdate(e, time);
     });
   };
 
@@ -327,15 +327,15 @@
       this.offKick   = o.offKick   || this.offKick;
     },
 
-    onUpdate : function () {
+    onUpdate : function (e, time) {
       if ( !this.isOn ) { return; }
       var magnitude = this.maxAmplitude( this.frequency );
       if ( magnitude >= this.currentThreshold &&
           magnitude >= this.threshold ) {
         this.currentThreshold = magnitude;
-        this.onKick && this.onKick.call( this.dancer, magnitude );
+        this.onKick && this.onKick.call( this.dancer, magnitude, time, e );
       } else {
-        this.offKick && this.offKick.call( this.dancer, magnitude );
+        this.offKick && this.offKick.call( this.dancer, magnitude, time, e );
         this.currentThreshold -= this.decay;
       }
     },

@@ -18,9 +18,19 @@ class mixer.Views.TrackView extends Backbone.View
       loadingColor: 'orange'
       cursorColor: 'navy'
 
+    $bpm = @$('.bpm')
+    i = 0
+    initial = 0
     @kick = @wavesurfer.createKick
-      onKick: (e) -> console.log 'kick on'
-      offKick: (e) -> console.log 'kick off'
+      frequency: [ 0, 10 ]
+      threshold: 0.5
+      decay: 0.005
+      onKick: (m, t) =>
+        @showBeats i++
+        initial = t if initial is 0
+        console.log i, t - initial
+        $bpm.html (i/(t - initial) * 60).toString().slice(0, 5)
+      # offKick: (e) -> console.log 'kick off'
 
     @wavesurfer.load options.url,
       progress: ->
@@ -82,7 +92,7 @@ class mixer.Views.TrackView extends Backbone.View
   onSeek: (e) ->
     @showPause()
 
-  showBeats: (e) ->
+  showBeats: (i) ->
     @wavesurfer.mark
-      id: 'up'
-      color: 'rgba(0, 255, 0, 0.5)'
+      id: 'up' + i
+      color: 'rgba(0, 0, 0, 0.5)'

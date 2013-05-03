@@ -78,7 +78,7 @@ WaveSurfer.WebAudio =
 
       @processFFT e
 
-      _.each @bindings.update, (f) -> f e
+      _.each @bindings.update, (f) => f e, @getCurrentTime()
 
       callback e if callback?
       if @getPlayedPercents() > 1.0
