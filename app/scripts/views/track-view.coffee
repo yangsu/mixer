@@ -1,7 +1,6 @@
 class mixer.Views.TrackView extends Backbone.View
 
   template: mixer.Templates.track
-
   initialize: (options) ->
     @$el.html @template()
 
@@ -32,18 +31,26 @@ class mixer.Views.TrackView extends Backbone.View
     'click .icon-play': 'onPlay'
     'click .icon-pause': 'onPause'
     'click .icon-forward': 'onForward'
+    'click canvas': 'onSeek'
 
+  showPlay: ->
+    @$('.icon-pause').replaceWith $ '<i class="icon-play"></i>'
+  showPause: ->
+    @$('.icon-play').replaceWith $ '<i class="icon-pause"></i>'
   onBackward: (e) ->
     return if not @loaded
     @wavesurfer.skipBackward()
   onPlay: (e) ->
     return if not @loaded
-    @$('.icon-play').replaceWith $ '<i class="icon-pause"></i>'
+    @showPause()
     @wavesurfer.playPause()
   onPause: (e) ->
     return if not @loaded
-    @$('.icon-pause').replaceWith $ '<i class="icon-play"></i>'
+    @showPlay()
     @wavesurfer.playPause()
   onForward: (e) ->
     return if not @loaded
     @wavesurfer.skipForward()
+
+  onSeek: (e) ->
+    @showPause()

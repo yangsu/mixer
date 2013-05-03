@@ -20,7 +20,6 @@ window.WaveSurfer =
     @bindClick params.canvas, (percents) =>
       @playAt percents
 
-
   onAudioProcess: ->
     @drawer.progress @backend.getPlayedPercents()  unless @backend.isPaused()
 
